@@ -39,6 +39,10 @@ If no arguments are provided, ask the user what they want to search for.
 | `podcasts`         | Podcast notes                                                         |
 | `companies`        | Company and business notes                                            |
 | `prompts`          | AI prompt notes                                                       |
+| `countries`        | Country notes                                                         |
+| `cities`           | City notes                                                            |
+| `places`           | Place notes (restaurants, cafes, locations)                           |
+| `trips`            | Trip and travel notes                                                 |
 
 ## Steps
 

@@ -19,7 +19,7 @@ Search the Obsidian Zettelkasten vault using `qmd` hybrid search (BM25 + vector 
 /search-vault nietzsche -n 10 --bm25
 ```
 
-**Collections:** `quotes`, `people`, `books`, `literature-notes`, `moc`, `permanent-notes`, `unsorted-notes`, `series`, `movies`, `lyrics`, `clippings`, `podcasts`, `companies`, `prompts`
+**Collections:** `quotes`, `people`, `books`, `literature-notes`, `moc`, `permanent-notes`, `unsorted-notes`, `series`, `movies`, `lyrics`, `clippings`, `podcasts`, `companies`, `prompts`, `countries`, `cities`, `places`, `trips`
 
 ---
 
