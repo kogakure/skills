@@ -32,8 +32,13 @@ If no arguments are provided, ask the user what they want to search for.
 | `moc`              | Maps of Content — thematic navigation hubs                            |
 | `permanent-notes`  | Evergreen atomic Zettelkasten notes                                   |
 | `unsorted-notes`   | Large mixed collection (5000+ notes)                                  |
-| `movies`           | Movie and series notes                                                |
+| `series`           | TV series notes                                                       |
+| `movies`           | Movie notes                                                           |
 | `lyrics`           | Lyrics and poems                                                      |
+| `clippings`        | Web clippings and saved articles                                      |
+| `podcasts`         | Podcast notes                                                         |
+| `companies`        | Company and business notes                                            |
+| `prompts`          | AI prompt notes                                                       |
 
 ## Steps
 
