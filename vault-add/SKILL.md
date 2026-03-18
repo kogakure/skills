@@ -19,7 +19,7 @@ Arguments: `<type> <title> [extra info]`
 Examples:
 
 - `/vault-add book "Atlas Shrugged"`
-- `/vault-add podcast "Athervox Patreon"`
+- `/vault-add podcast "Aethervox Ehrenfeld"`
 - `/vault-add show "Silicon Valley" 1.1`
 - `/vault-add movie "Dune"`
 
