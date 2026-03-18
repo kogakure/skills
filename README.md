@@ -40,6 +40,14 @@ Add a new book, podcast, TV show, or movie to the vault. Creates the resource no
 
 ## Installation
 
+### Using npx (recommended)
+
+```bash
+npx skills add kogakure/skills
+```
+
+### Manual
+
 Clone this repo and add the skills to your Claude Code configuration:
 
 ```bash
