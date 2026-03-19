@@ -1,5 +1,5 @@
 ---
-name: vault-add
+name: obsidian-vault-add
 description: Add a new book, podcast, TV show, or movie to the Obsidian Zettelkasten vault. Creates the resource note from a template, fills in metadata from the web, downloads cover art, updates today's daily note, and re-indexes qmd. Use when the user says "add book", "add podcast", "add show", "add movie", or wants to log media in their vault.
 allowed-tools: Bash(obsidian*), Bash(python3*), Bash(qmd*), Bash(ls*), Bash(wc*), WebSearch, Read, Edit, Write
 ---

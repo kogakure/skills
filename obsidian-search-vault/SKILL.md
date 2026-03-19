@@ -1,5 +1,5 @@
 ---
-name: search-vault
+name: obsidian-search-vault
 description: Search the Obsidian Zettelkasten vault using qmd hybrid search (BM25 + vector + LLM re-ranking). Use when the user wants to find notes, quotes, people, books, literature notes, permanent notes, or any content in their personal knowledge base.
 allowed-tools: Bash(qmd*)
 ---
