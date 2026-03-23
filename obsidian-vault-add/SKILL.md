@@ -1,20 +1,20 @@
 ---
 name: obsidian-vault-add
-description: Add a new book, podcast, TV show, or movie to the Obsidian Zettelkasten vault. Creates the resource note from a template, fills in metadata from the web, downloads cover art, updates today's daily note, and re-indexes qmd. Use when the user says "add book", "add podcast", "add show", "add movie", or wants to log media in their vault.
-allowed-tools: Bash(obsidian*), Bash(python3*), Bash(qmd*), Bash(ls*), Bash(wc*), WebSearch, Read, Edit, Write
+description: Add a new book, podcast, TV show, movie, country, or city to the Obsidian Zettelkasten vault. Creates the resource note from a template, fills in metadata from the web, downloads cover art, updates today's daily note (media only), and re-indexes qmd. Use when the user says "add book", "add podcast", "add show", "add movie", "add country", "add city", or wants to log media or places in their vault.
+allowed-tools: Bash(obsidian*), Bash(python3*), Bash(qmd*), Bash(ls*), Bash(wc*), Bash(mkdir*), WebSearch, Read, Edit, Write
 ---
 
 # vault-add
 
-Add a new resource (book, podcast, TV show, or movie) to the vault: create the note, download cover art, update today's daily note, and re-index.
+Add a new resource (book, podcast, TV show, movie, country, or city) to the vault: create the note, download cover art, update today's daily note (media only), and re-index.
 
 ## Argument parsing
 
 Arguments: `<type> <title> [extra info]`
 
-- `type` (required): `book`, `podcast`, `show` (or `tv`), `movie`
+- `type` (required): `book`, `podcast`, `show` (or `tv`), `movie`, `country` (or `land`), `city` (or `stadt`)
 - `title` (required): the resource title
-- `extra info` (optional): author, host, episode number, season/episode, etc.
+- `extra info` (optional): author, host, episode number, season/episode, country name (for cities), etc.
 
 Examples:
 
@@ -22,6 +22,8 @@ Examples:
 - `/vault-add podcast "Aethervox Ehrenfeld"`
 - `/vault-add show "Silicon Valley" 1.1`
 - `/vault-add movie "Dune"`
+- `/vault-add country "Japan"`
+- `/vault-add city "Kyoto"`
 
 If type or title is missing, ask the user before proceeding.
 
@@ -35,6 +37,8 @@ Search for the title to gather:
 **Podcast**: full name, host(s), language, genres, start year, description (German preferred)
 **TV show**: full name, actors, genres, network, seasons, episodes, IMDb rating, description (German preferred)
 **Movie**: full name, director(s), actors, genres, year, IMDb rating, description (German preferred)
+**Country**: official name, capital, continent, official language(s), currency, aliases (native name, abbreviations), short description (German preferred)
+**City**: full name, country, region/state, language(s), aliases (native name), short description (German preferred)
 
 ### 2. Check if note already exists
 
@@ -46,12 +50,14 @@ If the note already exists, inform the user and stop (unless they want to update
 
 ### 3. Create note from template
 
-| Type    | Path                                 | Template           |
-| ------- | ------------------------------------ | ------------------ |
-| book    | `03 - Resources/Bücher/<title>.md`   | `Book Template`    |
-| podcast | `03 - Resources/Podcasts/<title>.md` | `Podcast Template` |
-| show    | `03 - Resources/Serien/<title>.md`   | `TV Show Template` |
-| movie   | `03 - Resources/Filme/<title>.md`    | `Movie Template`   |
+| Type    | Path                                  | Template           |
+| ------- | ------------------------------------- | ------------------ |
+| book    | `03 - Resources/Bücher/<title>.md`    | `Book Template`    |
+| podcast | `03 - Resources/Podcasts/<title>.md`  | `Podcast Template` |
+| show    | `03 - Resources/Serien/<title>.md`    | `TV Show Template` |
+| movie   | `03 - Resources/Filme/<title>.md`     | `Movie Template`   |
+| country | `03 - Resources/Länder/<title>.md`    | `Country`          |
+| city    | `03 - Resources/Städte/<title>.md`    | `City`             |
 
 ```bash
 obsidian create path="<path>" template="<Template>" 2>/dev/null | grep -Ev "^(20[0-9]{2}-|Your Obsidian)"
@@ -61,6 +67,12 @@ obsidian create path="<path>" template="<Template>" 2>/dev/null | grep -Ev "^(20
 
 Edit the note file directly (Read then Edit) — do NOT use `obsidian property:set` for list fields as it does not reliably handle arrays. Set all fields in one Edit call by replacing the entire frontmatter block.
 
+**IMPORTANT — preserve existing data:** When updating an existing note, never discard data already present. Merge new metadata with what's there:
+- Keep all existing `aliases` and append any new ones not already listed
+- Keep all existing `tags` (only remove `BOAT` if present)
+- Keep any fields already filled in; only add/update empty fields
+- Keep all existing body content (sections, lists, notes)
+
 **Book frontmatter fields**: `aliases`, `tags: [Buch]`, `photo`, `urls`, `published` (YYYY-MM-DD), `authors` (list), `genres` (list), `rating`, `pages`
 
 **Podcast frontmatter fields**: `aliases`, `tags: [Podcast]`, `photo`, `urls`, `hosts` (list), `guests`, `genres` (list), `language`, `rating`, `status`, `started`, `ended`, `episodes`
@@ -68,6 +80,10 @@ Edit the note file directly (Read then Edit) — do NOT use `obsidian property:s
 **TV show frontmatter fields**: `aliases`, `tags: [Serie]`, `photo`, `urls`, `actors` (list), `genres` (list), `rating`, `imdb_rating`, `network`, `seasons`, `episodes`
 
 **Movie frontmatter fields**: `aliases`, `tags: [Film]`, `photo`, `urls`, `directors` (list), `actors` (list), `genres` (list), `rating`, `imdb_rating`, `year`
+
+**Country frontmatter fields**: `aliases`, `tags: [Land]`, `photo`, `urls`, `capital`, `continent`, `language` (list), `currency`, `visited`, `rating`, `cities` (list of wikilinks to known city notes)
+
+**City frontmatter fields**: `aliases`, `tags: [Stadt]`, `photo`, `urls`, `country` (wikilink), `region`, `language` (list), `visited`, `rating`
 
 Remove the `BOAT` tag from `tags` — notes with links are not BOAT.
 
@@ -149,6 +165,38 @@ image_url = data.get("originalimage", {}).get("source") or data.get("thumbnail",
 
 Output path: `99 - Meta/assets/movies/<title>.webp`
 
+**Country** — Wikipedia REST API (flag or representative image):
+
+```python
+import json, urllib.request, urllib.parse
+
+title = "<country name>"
+search_url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{urllib.parse.quote(title)}"
+req = urllib.request.Request(search_url, headers={"User-Agent": "Mozilla/5.0 VaultBot/1.0"})
+with urllib.request.urlopen(req, timeout=10) as resp:
+    data = json.loads(resp.read())
+image_url = data.get("originalimage", {}).get("source") or data.get("thumbnail", {}).get("source")
+# download and save as WebP using Pillow
+```
+
+Output path: `99 - Meta/assets/countries/<title>.webp`
+
+**City** — Wikipedia REST API:
+
+```python
+import json, urllib.request, urllib.parse
+
+title = "<city name>"
+search_url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{urllib.parse.quote(title)}"
+req = urllib.request.Request(search_url, headers={"User-Agent": "Mozilla/5.0 VaultBot/1.0"})
+with urllib.request.urlopen(req, timeout=10) as resp:
+    data = json.loads(resp.read())
+image_url = data.get("originalimage", {}).get("source") or data.get("thumbnail", {}).get("source")
+# download and save as WebP using Pillow
+```
+
+Output path: `99 - Meta/assets/cities/<title>.webp`
+
 **After successful download:**
 
 1. Set `photo: <filename>` in frontmatter (Edit the file)
@@ -165,9 +213,13 @@ Also add the new entry to the appropriate download script so future re-runs incl
 | show    | `99 - Meta/scripts/download-series-covers.py`  |
 | movie   | `99 - Meta/scripts/download-movie-covers.py`   |
 
+Countries and cities have no dedicated download script — skip this step for those types.
+
 ### 7. Update today's daily note
 
-Append to today's daily note using the correct emoji and wikilink format:
+**Skip this step for `country` and `city`** — they are reference notes, not media being consumed.
+
+For media types, append to today's daily note using the correct emoji and wikilink format:
 
 | Type    | Format                                     |
 | ------- | ------------------------------------------ |
