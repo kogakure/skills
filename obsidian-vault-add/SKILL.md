@@ -1,18 +1,18 @@
 ---
 name: obsidian-vault-add
-description: Add a new book, podcast, TV show, movie, country, or city to the Obsidian Zettelkasten vault. Creates the resource note from a template, fills in metadata from the web, downloads cover art, updates today's daily note (media only), and re-indexes qmd. Use when the user says "add book", "add podcast", "add show", "add movie", "add country", "add city", or wants to log media or places in their vault.
+description: Add a new book, podcast, TV show, movie, person, country, or city to the Obsidian Zettelkasten vault. Creates the resource note from a template, fills in metadata from the web, downloads cover art, updates today's daily note (media only), and re-indexes qmd. Use when the user says "add book", "add podcast", "add show", "add movie", "add person", "add country", "add city", or wants to log media, people, or places in their vault.
 allowed-tools: Bash(obsidian*), Bash(python3*), Bash(qmd*), Bash(ls*), Bash(wc*), Bash(mkdir*), WebSearch, Read, Edit, Write
 ---
 
 # vault-add
 
-Add a new resource (book, podcast, TV show, movie, country, or city) to the vault: create the note, download cover art, update today's daily note (media only), and re-index.
+Add a new resource (book, podcast, TV show, movie, person, country, or city) to the vault: create the note, download a photo/cover, update today's daily note (media only), and re-index.
 
 ## Argument parsing
 
 Arguments: `<type> <title> [extra info]`
 
-- `type` (required): `book`, `podcast`, `show` (or `tv`), `movie`, `country` (or `land`), `city` (or `stadt`)
+- `type` (required): `book`, `podcast`, `show` (or `tv`), `movie`, `person`, `country` (or `land`), `city` (or `stadt`)
 - `title` (required): the resource title
 - `extra info` (optional): author, host, episode number, season/episode, country name (for cities), etc.
 
@@ -22,6 +22,7 @@ Examples:
 - `/vault-add podcast "Aethervox Ehrenfeld"`
 - `/vault-add show "Silicon Valley" 1.1`
 - `/vault-add movie "Dune"`
+- `/vault-add person "Thomas Sowell"`
 - `/vault-add country "Japan"`
 - `/vault-add city "Kyoto"`
 
@@ -37,6 +38,7 @@ Search for the title to gather:
 **Podcast**: full name, host(s), language, genres, start year, description (German preferred)
 **TV show**: full name, actors, genres, network, seasons, episodes, IMDb rating, description (German preferred)
 **Movie**: full name, director(s), actors, genres, year, IMDb rating, description (German preferred)
+**Person**: full name, aliases, nationality, birthday (and death if applicable), domain/occupation, Wikipedia URL, notable works (books/articles/videos), short German biography (2–4 sentences)
 **Country**: official name, capital, continent, official language(s), currency, aliases (native name, abbreviations), short description (German preferred)
 **City**: full name, country, region/state, language(s), aliases (native name), short description (German preferred)
 
@@ -56,6 +58,7 @@ If the note already exists, inform the user and stop (unless they want to update
 | podcast | `03 - Resources/Podcasts/<title>.md`  | `Podcast Template` |
 | show    | `03 - Resources/Serien/<title>.md`    | `TV Show Template` |
 | movie   | `03 - Resources/Filme/<title>.md`     | `Movie Template`   |
+| person  | `03 - Resources/Personen/<title>.md`  | `Person Template`  |
 | country | `03 - Resources/Länder/<title>.md`    | `Country`          |
 | city    | `03 - Resources/Städte/<title>.md`    | `City`             |
 
@@ -83,6 +86,8 @@ Edit the note file directly (Read then Edit) — do NOT use `obsidian property:s
 
 **Country frontmatter fields**: `aliases`, `tags: [Land]`, `photo`, `urls`, `capital`, `continent`, `language` (list), `currency`, `visited`, `rating`, `cities` (list of wikilinks to known city notes)
 
+**Person frontmatter fields**: `aliases` (other names, pen names, maiden names), `tags` (Mann/Frau, nationality country, domain tags like Schriftsteller/Philosoph/etc.), `photo`, `urls`, `related`, `birthday` (YYYY-MM-DD), `death` (YYYY-MM-DD or empty), `location`, `quotes` (list of wikilinks), `books` (list of wikilinks to vault book notes), `articles`, `podcasts`, `videos`
+
 **City frontmatter fields**: `aliases`, `tags: [Stadt]`, `photo`, `urls`, `country` (wikilink), `region`, `language` (list), `visited`, `rating`
 
 Remove the `BOAT` tag from `tags` — notes with links are not BOAT.
@@ -90,6 +95,8 @@ Remove the `BOAT` tag from `tags` — notes with links are not BOAT.
 ### 5. Add description to body
 
 After the frontmatter, add a short German-language description paragraph (2–4 sentences). Keep any template section headers (`## Zusammenfassung`, `## Kernaussagen`, `## Lieblingsfolgen`, etc.).
+
+**Person body structure**: short German bio paragraph, then `### Fakten` (bullet list of key facts), then `### Ideen` (empty, for future notes).
 
 The image embed `![[filename.webp]]` will be added after cover download (step 6) — do not add it manually.
 
@@ -181,6 +188,22 @@ image_url = data.get("originalimage", {}).get("source") or data.get("thumbnail",
 
 Output path: `99 - Meta/assets/countries/<title>.webp`
 
+**Person** — Wikipedia REST API, then resize to max 800px on longest side:
+
+```python
+import json, urllib.request, urllib.parse
+
+name = "<person name>"
+search_url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{urllib.parse.quote(name)}"
+req = urllib.request.Request(search_url, headers={"User-Agent": "Mozilla/5.0 VaultBot/1.0"})
+with urllib.request.urlopen(req, timeout=15) as resp:
+    data = json.loads(resp.read())
+image_url = data.get("originalimage", {}).get("source") or data.get("thumbnail", {}).get("source")
+# download, resize to max 800px longest side, save as WebP using Pillow
+```
+
+Output path: `99 - Meta/assets/people/<title>.webp`
+
 **City** — Wikipedia REST API:
 
 ```python
@@ -213,11 +236,11 @@ Also add the new entry to the appropriate download script so future re-runs incl
 | show    | `99 - Meta/scripts/download-series-covers.py`  |
 | movie   | `99 - Meta/scripts/download-movie-covers.py`   |
 
-Countries and cities have no dedicated download script — skip this step for those types.
+Countries, cities, and persons have no dedicated download script — skip this step for those types.
 
 ### 7. Update today's daily note
 
-**Skip this step for `country` and `city`** — they are reference notes, not media being consumed.
+**Skip this step for `person`, `country`, and `city`** — they are reference notes, not media being consumed.
 
 For media types, append to today's daily note using the correct emoji and wikilink format:
 
