@@ -1,6 +1,6 @@
-# Claude Code Skills
+# AI Agent Code Skills
 
-Custom [Claude Code skills](https://docs.anthropic.com/en/docs/claude-code/skills) for personal use.
+Custom [AI Agent Code skills](https://docs.anthropic.com/en/docs/claude-code/skills) for personal use.
 
 ## Skills
 
