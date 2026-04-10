@@ -4,7 +4,7 @@ description: Add a new book, podcast, TV show, movie, person, country, or city t
 allowed-tools: Bash(obsidian*), Bash(python3*), Bash(qmd*), Bash(ls*), Bash(wc*), Bash(mkdir*), WebSearch, Read, Edit, Write
 ---
 
-# vault-add
+# obsidian-vault-add
 
 Add a new resource (book, podcast, TV show, movie, person, country, or city) to the vault: create the note, download a photo/cover, update today's daily note (media only), and re-index.
 
@@ -18,13 +18,13 @@ Arguments: `<type> <title> [extra info]`
 
 Examples:
 
-- `/vault-add book "Atlas Shrugged"`
-- `/vault-add podcast "Aethervox Ehrenfeld"`
-- `/vault-add show "Silicon Valley" 1.1`
-- `/vault-add movie "Dune"`
-- `/vault-add person "Thomas Sowell"`
-- `/vault-add country "Japan"`
-- `/vault-add city "Kyoto"`
+- `/obsidian-vault-add book "Atlas Shrugged"`
+- `/obsidian-vault-add podcast "Aethervox Ehrenfeld"`
+- `/obsidian-vault-add show "Silicon Valley" 1.1`
+- `/obsidian-vault-add movie "Dune"`
+- `/obsidian-vault-add person "Thomas Sowell"`
+- `/obsidian-vault-add country "Japan"`
+- `/obsidian-vault-add city "Kyoto"`
 
 If type or title is missing, ask the user before proceeding.
 
