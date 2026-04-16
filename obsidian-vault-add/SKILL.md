@@ -52,15 +52,15 @@ If the note already exists, inform the user and stop (unless they want to update
 
 ### 3. Create note from template
 
-| Type    | Path                                  | Template           |
-| ------- | ------------------------------------- | ------------------ |
-| book    | `03 - Resources/Bücher/<title>.md`    | `Book Template`    |
-| podcast | `03 - Resources/Podcasts/<title>.md`  | `Podcast Template` |
-| show    | `03 - Resources/Serien/<title>.md`    | `TV Show Template` |
-| movie   | `03 - Resources/Filme/<title>.md`     | `Movie Template`   |
-| person  | `03 - Resources/Personen/<title>.md`  | `Person Template`  |
-| country | `03 - Resources/Länder/<title>.md`    | `Country`          |
-| city    | `03 - Resources/Städte/<title>.md`    | `City`             |
+| Type    | Path                               | Template           |
+| ------- | ---------------------------------- | ------------------ |
+| book    | `03 Resources/Bücher/<title>.md`   | `Book Template`    |
+| podcast | `03 Resources/Podcasts/<title>.md` | `Podcast Template` |
+| show    | `03 Resources/Serien/<title>.md`   | `TV Show Template` |
+| movie   | `03 Resources/Filme/<title>.md`    | `Movie Template`   |
+| person  | `03 Resources/Personen/<title>.md` | `Person Template`  |
+| country | `03 Resources/Länder/<title>.md`   | `Country`          |
+| city    | `03 Resources/Städte/<title>.md`   | `City`             |
 
 ```bash
 obsidian create path="<path>" template="<Template>" 2>/dev/null | grep -Ev "^(20[0-9]{2}-|Your Obsidian)"
@@ -71,6 +71,7 @@ obsidian create path="<path>" template="<Template>" 2>/dev/null | grep -Ev "^(20
 Edit the note file directly (Read then Edit) — do NOT use `obsidian property:set` for list fields as it does not reliably handle arrays. Set all fields in one Edit call by replacing the entire frontmatter block.
 
 **IMPORTANT — preserve existing data:** When updating an existing note, never discard data already present. Merge new metadata with what's there:
+
 - Keep all existing `aliases` and append any new ones not already listed
 - Keep all existing `tags` (only remove `BOAT` if present)
 - Keep any fields already filled in; only add/update empty fields
@@ -121,7 +122,7 @@ if cover_id:
     # download and save as WebP using Pillow
 ```
 
-Output path: `99 - Meta/assets/books/<title> (<first author>).webp`
+Output path: `99 Meta/assets/books/<title> (<first author>).webp`
 
 **Podcast** — iTunes Search API:
 
@@ -138,7 +139,7 @@ artwork = data["results"][0].get("artworkUrl600") if data["results"] else None
 # download and save as WebP using Pillow
 ```
 
-Output path: `99 - Meta/assets/podcasts/<title>.webp`
+Output path: `99 Meta/assets/podcasts/<title>.webp`
 
 **TV show** — TVMaze API:
 
@@ -154,7 +155,7 @@ image_url = data.get("image", {}).get("original") or data.get("image", {}).get("
 # download and save as WebP using Pillow
 ```
 
-Output path: `99 - Meta/assets/series/<title>.webp`
+Output path: `99 Meta/assets/series/<title>.webp`
 
 **Movie** — Wikipedia REST API (search for poster):
 
@@ -170,7 +171,7 @@ image_url = data.get("originalimage", {}).get("source") or data.get("thumbnail",
 # download and save as WebP using Pillow
 ```
 
-Output path: `99 - Meta/assets/movies/<title>.webp`
+Output path: `99 Meta/assets/movies/<title>.webp`
 
 **Country** — Wikipedia REST API (flag or representative image):
 
@@ -186,7 +187,7 @@ image_url = data.get("originalimage", {}).get("source") or data.get("thumbnail",
 # download and save as WebP using Pillow
 ```
 
-Output path: `99 - Meta/assets/countries/<title>.webp`
+Output path: `99 Meta/assets/countries/<title>.webp`
 
 **Person** — Wikipedia REST API, then resize to max 800px on longest side:
 
@@ -202,7 +203,7 @@ image_url = data.get("originalimage", {}).get("source") or data.get("thumbnail",
 # download, resize to max 800px longest side, save as WebP using Pillow
 ```
 
-Output path: `99 - Meta/assets/people/<title>.webp`
+Output path: `99 Meta/assets/people/<title>.webp`
 
 **City** — Wikipedia REST API:
 
@@ -218,7 +219,7 @@ image_url = data.get("originalimage", {}).get("source") or data.get("thumbnail",
 # download and save as WebP using Pillow
 ```
 
-Output path: `99 - Meta/assets/cities/<title>.webp`
+Output path: `99 Meta/assets/cities/<title>.webp`
 
 **After successful download:**
 
@@ -229,12 +230,12 @@ If cover download fails, note it to the user and continue without a photo.
 
 Also add the new entry to the appropriate download script so future re-runs include it:
 
-| Type    | Script                                         |
-| ------- | ---------------------------------------------- |
-| book    | `99 - Meta/scripts/download-book-covers.py`    |
-| podcast | `99 - Meta/scripts/download-podcast-covers.py` |
-| show    | `99 - Meta/scripts/download-series-covers.py`  |
-| movie   | `99 - Meta/scripts/download-movie-covers.py`   |
+| Type    | Script                                       |
+| ------- | -------------------------------------------- |
+| book    | `99 Meta/scripts/download-book-covers.py`    |
+| podcast | `99 Meta/scripts/download-podcast-covers.py` |
+| show    | `99 Meta/scripts/download-series-covers.py`  |
+| movie   | `99 Meta/scripts/download-movie-covers.py`   |
 
 Countries, cities, and persons have no dedicated download script — skip this step for those types.
 
