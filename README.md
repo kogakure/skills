@@ -9,6 +9,7 @@ Custom [AI Agent Code skills](https://docs.anthropic.com/en/docs/claude-code/ski
 | `obsidian-search-vault`   | Search the Obsidian Zettelkasten vault using hybrid search (BM25 + vector + LLM re-ranking) |
 | `obsidian-vault-add`      | Add a new book, podcast, TV show, movie, person, country, or city to the vault              |
 | `obsidian-weekly-summary` | Summarize the current week from Obsidian daily notes into a structured German recap         |
+| `handoff`                 | Compact the current conversation into a structured handoff document for another agent       |
 
 ## Installation
 
@@ -33,7 +34,8 @@ Then register them in your `~/.claude/settings.json`:
   "skills": [
     "~/.claude/skills/obsidian-search-vault",
     "~/.claude/skills/obsidian-vault-add",
-    "~/.claude/skills/obsidian-weekly-summary"
+    "~/.claude/skills/obsidian-weekly-summary",
+    "~/.claude/skills/handoff"
   ]
 }
 ```
