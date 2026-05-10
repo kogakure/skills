@@ -102,3 +102,5 @@ Write the summary in **German**, matching the language of the vault. Structure i
 Omit any section that has no entries. Keep bullets concise — one line per item. For learning totals, add up minutes across all days.
 
 If the week has only 1–2 days (e.g., it's Monday or Tuesday), note this naturally: "Die Woche hat gerade erst begonnen."
+
+Write this weekly review into a file in `~/Code/personal/obsidian/zettelkasten/06 Daily/<YYYY>/weekly/Wochenrückblick - KW <Week> (<DD. MONTH—DD. MONTH YEAR>).md`. If the note already exists update it with the new sections.
