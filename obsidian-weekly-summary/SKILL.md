@@ -103,4 +103,12 @@ Omit any section that has no entries. Keep bullets concise — one line per item
 
 If the week has only 1–2 days (e.g., it's Monday or Tuesday), note this naturally: "Die Woche hat gerade erst begonnen."
 
-Write this weekly review into a file in `~/Code/personal/obsidian/zettelkasten/06 Daily/<YYYY>/weekly/Wochenrückblick - KW <Week> (<DD. MONTH—DD. MONTH YEAR>).md`. If the note already exists update it with the new sections.
+Write this weekly review into a file in `~/Code/personal/obsidian/zettelkasten/06 Daily/Wochenrückblick/<YYYY>-W<WW>.md` (e.g. `2026-W21.md`). Use zero-padded week number.
+
+If the file does not exist, create it from the `Weekly Template` via:
+
+```bash
+obsidian create path="06 Daily/Wochenrückblick/2026-W21.md" template="Weekly Template"
+```
+
+Then append the content (h2 headline + h3 sections) to the file. If the file already exists, update it with the new sections.
