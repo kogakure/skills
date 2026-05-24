@@ -1,0 +1,23 @@
+{
+  "skill_name": "obsidian-process-notes",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run obsidian-process-notes for the newest clipping.",
+      "expected_output": "Reads one unprocessed clipping, updates only `03 Resources/Wiki`, appends to `Wiki-Log.md`, moves the clipping unchanged to `03 Resources/Clippings/Processed/`, and reports created/updated pages.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "obsidian-build-wiki: process the clippings about AI and work.",
+      "expected_output": "Selects relevant unprocessed clippings, integrates them into German wiki pages tagged `🤖`, updates `Index.md` and `Wiki-Log.md`, preserves uncertainty, and moves processed clippings unchanged.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Are there any new clippings to process into the Wiki?",
+      "expected_output": "Checks `03 Resources/Clippings` excluding `Processed`; if files exist, offers or performs a small scoped batch, otherwise reports that there are no unprocessed clippings.",
+      "files": []
+    }
+  ]
+}
