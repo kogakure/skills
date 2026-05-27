@@ -47,6 +47,7 @@ that is reasonable for the current turn.
   `03 Resources/Clippings/Processed/`.
 - Use `99 Meta/templates/Note Template.md` as the frontmatter basis for every
   new Wiki note.
+- Do not use hard line-breaks in paragraphs or lists unless absolutely needed, keep a block of text as one coherent block of text in Markdown
 - Write Wiki note bodies exclusively in German. Use Umlauts and German special characters (ä, ö, ü, ß instead of ae, oe, ue, ss), in files and filenames
 - For important terms, add the English term in parentheses after the German
   translation, for example `Abruf (retrieval)`.
