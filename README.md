@@ -11,6 +11,7 @@ Custom [AI Agent Code skills](https://docs.anthropic.com/en/docs/claude-code/ski
 | `obsidian-weekly-summary` | Summarize the current week from Obsidian daily notes into a structured German recap         |
 | `obsidian-process-notes`  | Process new Obsidian Web Clipper notes into the AI-maintained Wiki layer                    |
 | `handoff`                 | Compact the current conversation into a structured handoff document for another agent       |
+| `ia-presenter`            | Create high-quality presentations for iA Presenter (Mac) with proper Markdown syntax       |
 
 ## Installation
 
@@ -37,7 +38,8 @@ Then register them in your `~/.claude/settings.json`:
     "~/.claude/skills/obsidian-vault-add",
     "~/.claude/skills/obsidian-weekly-summary",
     "~/.claude/skills/obsidian-process-notes",
-    "~/.claude/skills/handoff"
+    "~/.claude/skills/handoff",
+    "~/.claude/skills/ia-presenter"
   ]
 }
 ```
