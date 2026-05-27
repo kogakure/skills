@@ -1,0 +1,23 @@
+{
+  "skill_name": "ia-presenter",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to give a 15-minute talk at our company all-hands next week about why we're switching our backend from REST to GraphQL. Audience is mostly frontend engineers and product managers — they understand APIs but not deeply. I want to get them excited, not just inform them. Can you create the presentation for me?",
+      "expected_output": "A complete iA Presenter .md file with ~12–15 slides. Should include: cover slide with strong title, hook slide (why the current pain matters), explanation of GraphQL benefits vs REST pain points, a comparison slide, practical examples, migration timeline or what changes for the team, and a call to action. Speaker notes for every slide. Proper iA Presenter syntax: --- separators, tab-indented slide content, regular paragraphs as speaker notes. Theme recommendation appropriate for a tech internal talk.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Turn this into a presentation:\n\n# The Hidden Cost of Technical Debt\n\nMost teams don't track technical debt. They feel it — in the time it takes to ship a feature, in the bugs that keep coming back, in the onboarding time for new engineers.\n\nOur team did an audit. We found 3 main debt clusters:\n1. The authentication service — written in 2017, never refactored, 0 test coverage\n2. The data pipeline — 4 different people have touched it, no one owns it\n3. Frontend state management — we're using 3 different patterns across the app\n\nEach of these is costing us. Rough estimates:\n- Auth service: 2 days per quarter on bug fixes, 1 day to onboard new devs to that area\n- Data pipeline: 1 outage per month averaging 4 hours downtime\n- State management: each new frontend feature takes ~30% longer than it should\n\nThe proposal: dedicate one sprint per quarter to debt reduction. Rotate ownership. Track it on the same board as features.\n\nExpected outcome: within 2 quarters, shipping velocity should improve by ~20%.",
+      "expected_output": "A complete iA Presenter .md file that transforms the document into a presentation. Should NOT simply dump the text onto slides. Instead: extracts the narrative structure (problem → evidence → impact → proposal → outcome), creates distinct slides for each point, uses strong slide headlines (not just 'Technical Debt'), converts the numbers into visual comparison slides or table/chart opportunities, writes proper speaker notes, and uses correct iA Presenter syntax throughout.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I'm presenting my photography portfolio to potential clients — wedding and portrait photographers who might hire me as a second shooter. The presentation is about 10 minutes, very visual. I want slides that mostly show images (I'll add my actual photos later, use placeholder names) with minimal text. The story is: who I am, my style and approach, a few portfolio categories (weddings, portraits, events), my gear and technical skills, and how to book me. Make it feel premium and warm.",
+      "expected_output": "A complete iA Presenter .md file (~10–12 slides). Should be image-forward: most slides use background image syntax or image-heavy layouts with minimal text. Slide headlines are short and evocative. Speaker notes carry the narrative. Uses Content Blocks syntax for image control (layer: background, size: cover, filter: darken where text appears over images). Placeholder image paths like /assets/wedding-ceremony.jpg. Theme recommendation for premium/warm aesthetic (Milano or Copenhagen dark). Minimal text on slides.",
+      "files": []
+    }
+  ]
+}
