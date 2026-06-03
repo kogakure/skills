@@ -6,7 +6,7 @@ allowed-tools: Bash(qmd*)
 
 # Search Vault
 
-Search the user's Obsidian Zettelkasten using `qmd`. The user's query is passed as arguments to `/search-vault`.
+Search the user's Obsidian Zettelkasten using `qmd`. The user's query is passed as arguments to `/obsidian-search-vault`.
 
 ## Argument parsing
 
