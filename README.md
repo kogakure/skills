@@ -13,6 +13,7 @@ Custom [AI Agent Code skills](https://docs.anthropic.com/en/docs/claude-code/ski
 | `handoff`                 | Compact the current conversation into a structured handoff document for another agent       |
 | `ia-presenter`            | Create high-quality presentations for iA Presenter (Mac) with proper Markdown syntax       |
 | `presentation-zen`        | Design and deliver perfect, engaging presentations using the Presentation Zen philosophy    |
+| `tufte`                   | Apply Edward Tufte's information design principles to create, critique, or improve any chart, graph, infographic, dashboard, or data visualization |
 
 ## Installation
 
@@ -41,7 +42,8 @@ Then register them in your `~/.claude/settings.json`:
     "~/.claude/skills/obsidian-process-notes",
     "~/.claude/skills/handoff",
     "~/.claude/skills/ia-presenter",
-    "~/.claude/skills/presentation-zen"
+    "~/.claude/skills/presentation-zen",
+    "~/.claude/skills/tufte"
   ]
 }
 ```
