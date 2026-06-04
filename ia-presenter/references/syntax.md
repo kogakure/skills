@@ -168,6 +168,11 @@ opacity: 0.6
 - `align: right bottom`
 - etc. — any combination of left/center/right and top/center/bottom
 
+Alternatively use separate `x:` and `y:` attributes (equivalent, both valid):
+
+- `x: left` / `x: center` / `x: right`
+- `y: top` / `y: center` / `y: bottom`
+
 **Layer options:**
 
 - `layer: content` — foreground (default)
@@ -183,6 +188,8 @@ opacity: 0.6
 
 **Opacity:** `opacity: 0.5` (0.0–1.0)
 
+**Title / placeholder label:** `title: "Placeholder"` — marks an image as a placeholder; visible as a label in the editor
+
 **Custom CSS class:** `class: my-custom-class`
 
 ### Image with caption
@@ -195,10 +202,25 @@ Place an `####` heading next to an image:
 #### Revenue grew 40% YoY
 ```
 
+### Placeholder images
+
+While writing, use a placeholder rather than hunting for the perfect image.
+Mark it with `title: "Placeholder"` so you remember to replace it:
+
+```markdown
+/Theme/image2.webp
+title: "Placeholder"
+```
+
+`/Theme/` is a special path prefix that references images bundled with the
+currently active theme. Replace with your real asset path before presenting.
+
 ### External URLs
 
 ```markdown
 https://source.example.com/photo.jpg
+x: left
+y: top
 ```
 
 ### Unsplash (built-in integration)
@@ -250,7 +272,21 @@ Standard Markdown table syntax. Column alignment via colon position:
 ```
 
 Any table can be converted to a bar, line, or pie chart via the chart icon
-in iA Presenter's contextual toolbar.
+in iA Presenter's contextual toolbar. You can also set the chart type inline
+with `Chart:` immediately after the table:
+
+```markdown
+|         | Series 1 | Series 2 |
+| :------ | :------- | :------- |
+| Group A | 10       | 15       |
+| Group B | 15       | 20       |
+| Group C | 25       | 30       |
+Chart: Bar
+yLabel: Revenue (€)
+```
+
+**Chart types:** `Bar`, `Line`, `Pie`
+**Axis labels:** `xLabel: label` / `yLabel: label`
 
 ### Importing data
 
@@ -384,6 +420,19 @@ Four or more tab-indented items auto-arrange in a grid:
     Trust
 
     Openness
+```
+
+### Two-column split (multiple headings, no separator)
+
+Two `###` headings on the same slide (no `---` between them) trigger a
+split/column layout:
+
+```markdown
+### Option A
+    Pros: fast to implement, low cost.
+
+### Option B
+    Pros: more robust, scales better.
 ```
 
 ### Quote slide

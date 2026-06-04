@@ -188,9 +188,43 @@ layer: background
 | :------ | ----: | -----: |
 | Revenue | $2.1M |  $2.9M |
 | Users   | 8,400 | 12,200 |
+Chart: Bar
+yLabel: Revenue (€)
 ```
 
-Any table can become a bar, line, or pie chart inside iA Presenter.
+`Chart: Bar`, `Chart: Line`, or `Chart: Pie` immediately after the table
+sets the chart type inline. `xLabel:` / `yLabel:` add axis labels.
+Any table can also be converted interactively via the iA Presenter toolbar.
+
+### Placeholder image (use while writing, replace before presenting)
+
+```markdown
+/Theme/image2.webp
+title: "Placeholder"
+```
+
+`/Theme/` references assets bundled with the active theme. `title:` labels
+the placeholder so it's easy to find and swap later.
+
+### Two-column split (two `###` headings on same slide, no `---`)
+
+```markdown
+### Option A
+    Fast to implement, low cost.
+
+### Option B
+    More robust, scales better.
+```
+
+### Image positioning with `x:` / `y:`
+
+```markdown
+https://example.com/photo.jpg
+x: left
+y: top
+```
+
+Equivalent to `align: left top`. Both syntaxes work.
 
 ### Speaker notes with private comment
 
