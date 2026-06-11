@@ -1,25 +1,33 @@
 ---
 name: obsidian-process-notes
-description: Process new Obsidian Web Clipper notes into the vault's AI-maintained Wiki. Use this skill whenever the user asks to process notes, process clippings, ingest clippings, build the wiki, update the wiki from new notes, run obsidian-process-notes, run obsidian-build-wiki, or maintain the AI wiki layer. It reads new files from `03 Resources/Clippings`, creates or updates German LLM-generated wiki pages in `03 Resources/Wiki`, appends to the wiki log, and moves processed clippings unchanged into `03 Resources/Clippings/Processed`.
-allowed-tools: Bash(ls*), Bash(find*), Bash(wc*), Bash(grep*), Bash(qmd*), Bash(mv*), Read, Edit, Write
+description: Process inbox notes into the standalone LLM Wiki vault. Use this skill whenever the user asks to process notes, process clippings, ingest clippings, build the wiki, update the wiki from new notes, run obsidian-process-notes, run obsidian-build-wiki, or maintain the AI wiki layer. It reads new files from `inbox/`, creates or updates German LLM-generated wiki pages in `wiki/`, appends to the wiki log, and moves processed notes unchanged into `sources/`.
+allowed-tools: Bash(ls*), Bash(find*), Bash(wc*), Bash(grep*), Bash(qmd*), Bash(mv*), Bash(mkdir*), Read, Edit, Write
 ---
 
 # obsidian-process-notes
 
-Process new Obsidian Web Clipper notes into the AI-maintained Wiki layer.
+Process inbox notes into the AI-maintained Wiki layer.
 
-This skill belongs to the Obsidian Zettelkasten vault at
-`~/Code/personal/obsidian/zettelkasten`.
+This skill operates on the standalone LLM Wiki vault at
+`~/Code/personal/obsidian/llm-wiki`.
+
+**Safety:** Never touch `~/Code/personal/obsidian/zettelkasten/` or any path
+outside the `llm-wiki` vault.
 
 ## Core Paths
 
-- Raw clippings: `03 Resources/Clippings/`
-- Processed clippings: `03 Resources/Clippings/Processed/`
-- Wiki: `03 Resources/Wiki/`
-- Wiki index: `03 Resources/Wiki/Index.md`
-- Wiki log: `03 Resources/Wiki/Wiki-Log.md`
-- Wiki agent rules: `.agents/wiki.md`
-- Note template basis: `99 Meta/templates/Note Template.md`
+All paths are relative to `~/Code/personal/obsidian/llm-wiki/`.
+
+- Inbox (unprocessed): `inbox/`
+- Processed sources: `sources/`
+- Source assets: `sources/assets/`
+- Wiki output: `wiki/`
+- Wiki assets: `wiki/assets/`
+- Navigation index: `meta/Index.md`
+- Operational log: `meta/Wiki-Log.md`
+- Agent rules: `.agents/wiki.md`
+- Wiki note template: `meta/templates/Wiki Note.md`
+- Source note template: `meta/templates/Source Note.md`
 
 ## Trigger Arguments
 
@@ -29,33 +37,34 @@ Accept natural language requests and slash-style phrases such as:
 - `obsidian-build-wiki`
 - `process new notes`
 - `process clippings`
-- `ingest the new Web Clipper notes`
-- `build out the wiki from clippings`
+- `ingest the new inbox notes`
+- `build out the wiki from inbox`
 
-If the user names a specific clipping, process only that file. If they give a
+If the user names a specific file, process only that file. If they give a
 limit such as "process 3 notes", process the oldest or first listed matching
-unprocessed clippings unless they specify another priority. If they do not
-specify scope, list available unprocessed clippings and process a small batch
-that is reasonable for the current turn.
+unprocessed notes unless they specify another priority. If they do not
+specify scope, list available inbox notes and process a small batch that is
+reasonable for the current turn.
 
 ## Non-Negotiable Rules
 
-- Write content only inside `03 Resources/Wiki/`.
-- Do not edit existing notes outside `03 Resources/Wiki/`.
-- The only permitted mutation outside the Wiki is moving a processed clipping,
-  unchanged, from `03 Resources/Clippings/` to
-  `03 Resources/Clippings/Processed/`.
-- Use `99 Meta/templates/Note Template.md` as the frontmatter basis for every
-  new Wiki note.
-- Do not use hard line-breaks in paragraphs or lists unless absolutely needed, keep a block of text as one coherent block of text in Markdown
-- Write Wiki note bodies exclusively in German. Use Umlauts and German special characters (ä, ö, ü, ß instead of ae, oe, ue, ss), in files and filenames
+- Write content only inside `wiki/` and `meta/`.
+- Do not edit existing notes in `sources/` or `inbox/`.
+- The only permitted file move is `inbox/X.md` → `sources/X.md`.
+- Use `meta/templates/Wiki Note.md` as the frontmatter basis for every
+  new wiki page. Use `type: Wiki` — not `type: Note`.
+- Do not use hard line-breaks in paragraphs or lists unless absolutely needed.
+  Keep a block of text as one coherent block in Markdown.
+- Write wiki note bodies exclusively in German. Use Umlauts and German
+  special characters (ä, ö, ü, ß instead of ae, oe, ue, ss), in text
+  and filenames.
 - For important terms, add the English term in parentheses after the German
   translation, for example `Abruf (retrieval)`.
-- Add `🤖` to the `tags` field of every LLM-generated Wiki note.
-- Preserve uncertainty, contradictions, and missing context. Do not smooth over
-  disagreement between sources.
-- Link freely to existing vault notes outside the Wiki, but do not edit them.
-- It is allowed to create wikilinks to non-existing future notes.
+- Add `🤖` to the `tags` field of every LLM-generated wiki page.
+- Preserve uncertainty, contradictions, and missing context. Do not smooth
+  over disagreement between sources.
+- Wikilinks to non-existing notes are allowed. Cross-vault links to the
+  Zettelkasten will appear unresolved — that is acceptable.
 
 ## Workflow
 
@@ -64,40 +73,40 @@ that is reasonable for the current turn.
 Read these files first:
 
 1. `.agents/wiki.md`
-2. `03 Resources/Wiki/Index.md`
-3. `03 Resources/Wiki/Wiki-Log.md`
+2. `meta/Index.md`
+3. `meta/Wiki-Log.md`
 
-Then read any relevant Wiki pages from the index before writing.
+Then read any relevant wiki pages before writing.
 
-### 2. Identify Unprocessed Clippings
+### 2. Identify Unprocessed Notes
 
-Find Markdown files directly under `03 Resources/Clippings/`, excluding
-`03 Resources/Clippings/Processed/`.
+Find Markdown files directly under `inbox/`.
 
-Prefer `find` or `ls` for file discovery. Use `grep` or `qmd` only when useful
-for content search.
+```bash
+find ~/Code/personal/obsidian/llm-wiki/inbox -maxdepth 1 -name "*.md"
+```
 
-If no unprocessed clippings exist, say so briefly and stop.
+If no inbox notes exist, say so briefly and stop.
 
-### 3. Read and Triage Each Clipping
+### 3. Read and Triage Each Note
 
-For each selected clipping:
+For each selected note:
 
 - Identify title, source URL, author, date if available, and central claims.
-- Decide whether the clipping needs:
+- Decide whether the note needs:
   - a source page,
   - updates to existing concept/entity/synthesis pages,
   - new concept/entity/synthesis pages,
   - a contradiction or open-question note in an existing page.
-- Prefer integrating into existing Wiki pages over creating duplicate pages.
+- Prefer integrating into existing wiki pages over creating duplicates.
 
 ### 4. Write Wiki Updates
 
-For each new Wiki page, use this frontmatter shape:
+For each new wiki page, use this frontmatter shape:
 
 ```yaml
 ---
-type: Note
+type: Wiki
 created: YYYY-MM-DDTHH:mm
 updated: YYYY-MM-DDTHH:mm
 aliases:
@@ -112,13 +121,12 @@ reference:
 ---
 ```
 
-Use German headings and prose. Keep pages concise enough to remain useful, but
-specific enough that future agents can update them without re-reading every
-raw source.
+Use German headings and prose. Keep pages concise but specific enough that
+future agents can update them without re-reading every raw source.
 
 Recommended sections by page type:
 
-- Source page: `# Titel`, `## Kernaussagen`, `## Relevanz fuer das Wiki`,
+- Source page: `# Titel`, `## Kernaussagen`, `## Relevanz für das Wiki`,
   `## Verbindungen`, `## Offene Fragen`
 - Concept page: `# Begriff`, `## Definition`, `## Kontext`, `## Quellenlage`,
   `## Verbindungen`, `## Offene Fragen`
@@ -129,50 +137,57 @@ Recommended sections by page type:
 
 ### 5. Update Navigation and Log
 
-Update `03 Resources/Wiki/Index.md` when:
+Update `meta/Index.md` when:
 
 - a new page is created,
 - a page changes category,
 - an existing one-line description becomes stale,
 - new important open paths appear.
 
-Append to `03 Resources/Wiki/Wiki-Log.md` using:
+Append to `meta/Wiki-Log.md` using:
 
 ```markdown
-## [YYYY-MM-DD] ingest | Clipping Title
+## [YYYY-MM-DD] ingest | Note Title
 
-- Quelle verarbeitet: `03 Resources/Clippings/Clipping Title.md`
+- Quelle verarbeitet: `inbox/Note Title.md`
 - Wiki-Seiten erstellt: [[...]]
 - Wiki-Seiten aktualisiert: [[...]]
-- Offene Fragen/Widersprueche: ...
+- Offene Fragen/Widersprüche: ...
 ```
 
 Use `query` instead of `ingest` if the user asked a question and the durable
-answer was filed back into the Wiki.
+answer was filed back into the wiki.
 
-### 6. Move Processed Clipping
+### 6. Move Processed Note
 
-After Wiki updates are complete, move the original clipping unchanged to:
+After wiki updates are complete, move the original note unchanged:
 
-`03 Resources/Clippings/Processed/`
+```bash
+mv ~/Code/personal/obsidian/llm-wiki/inbox/"Note Title.md" \
+   ~/Code/personal/obsidian/llm-wiki/sources/"Note Title.md"
+```
 
-Use `mv` only for this clipping move. Do not rewrite or normalize the clipping
-content.
+Do not rewrite or normalize the note content.
 
-### 7. Re-Index if Available
+### 7. Re-Index
 
-Try `qmd update` after processing. If it fails because of local tooling, report
-the failure briefly and include the relevant cause. Do not let indexing failure
-invalidate completed Wiki work.
+Run `qmd update` from inside the vault root after processing:
+
+```bash
+cd ~/Code/personal/obsidian/llm-wiki && qmd update
+```
+
+If it fails, report the failure briefly. Do not let indexing failure
+invalidate completed wiki work.
 
 ## Output To User
 
 End with a compact report:
 
-- clippings processed,
-- Wiki pages created,
-- Wiki pages updated,
-- clippings moved,
+- notes processed,
+- wiki pages created,
+- wiki pages updated,
+- notes moved to `sources/`,
 - any unresolved contradictions or follow-up questions,
 - whether `qmd update` succeeded.
 
@@ -180,9 +195,9 @@ Use clickable file links for local files when reporting results.
 
 ## Safety Checks Before Final Answer
 
-- Confirm no files outside `03 Resources/Wiki/` were edited, except
-  `AGENTS.md`, `CLAUDE.md`, `.agents/`, or the explicit processed clipping
-  move if the current task asked for setup rather than ingestion.
-- Confirm every created or updated Wiki note has `tags: [🤖]` or an equivalent
+- Confirm no files outside `wiki/` and `meta/` were edited, except for the
+  explicit inbox → sources move.
+- Confirm every created or updated wiki note has `tags: [🤖]` or an equivalent
   YAML list containing `🤖`.
-- Confirm the processed clipping still exists in `Processed/` after moving.
+- Confirm the processed note exists in `sources/` after moving.
+- Confirm no files in `~/Code/personal/obsidian/zettelkasten/` were touched.
