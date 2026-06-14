@@ -80,7 +80,7 @@ Write the summary in **German**, matching the language of the vault. Structure i
 - bullet per workout (type, duration, notable stats)
 
 ### 🎓 Lernen
-- Duolingo: X Sprachen, ca. Y Minuten insgesamt
+- Duolingo: X Sprachen: Sprache A ca. Y Minuten, Sprache B ca. Y Minuten
 - Anki: ca. Z Karten, ca. Y Minuten insgesamt
 - Colemak-DH: ca. Y Minuten insgesamt
 
@@ -88,9 +88,9 @@ Write the summary in **German**, matching the language of the vault. Structure i
 - bullet per social event or notable appointment
 
 ### 📺 Medien
-- 📺 TV: list shows + episodes
-- 📚 Bücher: title + progress
-- 🎬 Filme: titles
+- 📺 TV: list shows + episodes (one line per show)
+- 📚 Bücher: title + progress (one line per book)
+- 🎬 Filme: titles (one line per movie)
 
 ### ✨ Highlights
 - bullet per notable moment, freeform text, or 🤩 entry

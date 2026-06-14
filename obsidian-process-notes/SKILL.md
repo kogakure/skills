@@ -23,7 +23,7 @@ All paths are relative to `~/Code/personal/obsidian/llm-wiki/`.
 - Source assets: `sources/assets/`
 - Wiki output: `wiki/`
 - Wiki assets: `wiki/assets/`
-- Navigation index: `meta/Index.md`
+- Navigation index: `Index.md`
 - Operational log: `meta/Wiki-Log.md`
 - Agent rules: `.agents/wiki.md`
 - Wiki note template: `meta/templates/Wiki Note.md`
@@ -73,7 +73,7 @@ reasonable for the current turn.
 Read these files first:
 
 1. `.agents/wiki.md`
-2. `meta/Index.md`
+2. `Index.md`
 3. `meta/Wiki-Log.md`
 
 Then read any relevant wiki pages before writing.
@@ -137,7 +137,7 @@ Recommended sections by page type:
 
 ### 5. Update Navigation and Log
 
-Update `meta/Index.md` when:
+Update `Index.md` when:
 
 - a new page is created,
 - a page changes category,
