@@ -14,6 +14,7 @@ Custom [AI Agent Code skills](https://docs.anthropic.com/en/docs/claude-code/ski
 | `ia-presenter`            | Create high-quality presentations for iA Presenter (Mac) with proper Markdown syntax       |
 | `presentation-zen`        | Design and deliver perfect, engaging presentations using the Presentation Zen philosophy    |
 | `tufte`                   | Apply Edward Tufte's information design principles to create, critique, or improve any chart, graph, infographic, dashboard, or data visualization |
+| `daily-summary`           | Search all Claude Code sessions of the current day and produce a short German bullet list summary of tasks completed, grouped by project/repo     |
 
 ## Installation
 
