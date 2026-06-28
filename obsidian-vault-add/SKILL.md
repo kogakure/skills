@@ -42,15 +42,22 @@ Search for the title to gather:
 **Country**: official name, capital, continent, official language(s), currency, aliases (native name, abbreviations), short description (German preferred)
 **City**: full name, country, region/state, language(s), aliases (native name), short description (German preferred)
 
-### 2. Check if note already exists
+### 2. Derive filename
+
+Colons are not allowed in filenames. If the title contains a colon (e.g. `"Book: Subtitle"`):
+
+1. Replace the colon (and any surrounding spaces) with ` - ` → filename becomes `Book - Subtitle.md`
+2. Add the original title with the colon as the **first alias** in the frontmatter `aliases` list
+
+### 3. Check if note already exists
 
 ```bash
-obsidian read file="<title>" 2>/dev/null | grep -Ev "^(20[0-9]{2}-|Your Obsidian)"
+obsidian read file="<derived-filename>" 2>/dev/null | grep -Ev "^(20[0-9]{2}-|Your Obsidian)"
 ```
 
 If the note already exists, inform the user and stop (unless they want to update it).
 
-### 3. Create note from template
+### 4. Create note from template
 
 | Type    | Path                               | Template           |
 | ------- | ---------------------------------- | ------------------ |
@@ -66,7 +73,7 @@ If the note already exists, inform the user and stop (unless they want to update
 obsidian create path="<path>" template="<Template>" 2>/dev/null | grep -Ev "^(20[0-9]{2}-|Your Obsidian)"
 ```
 
-### 4. Fill in frontmatter
+### 5. Fill in frontmatter
 
 Edit the note file directly (Read then Edit) — do NOT use `obsidian property:set` for list fields as it does not reliably handle arrays. Set all fields in one Edit call by replacing the entire frontmatter block.
 
@@ -91,9 +98,11 @@ Edit the note file directly (Read then Edit) — do NOT use `obsidian property:s
 
 **City frontmatter fields**: `aliases`, `tags: [Stadt]`, `photo`, `urls`, `country` (wikilink), `region`, `language` (list), `visited`, `rating`
 
+**YAML quoting rule**: Any frontmatter value that contains a colon must be wrapped in double quotes — including titles, descriptions, aliases, and all string fields. Example: `title: "Book: Subtitle"`, `aliases: ["Book: Subtitle"]`.
+
 Remove the `BOAT` tag from `tags` — notes with links are not BOAT.
 
-### 5. Add description to body
+### 6. Add description to body
 
 After the frontmatter, add a short German-language description paragraph (2–4 sentences). Keep any template section headers (`## Zusammenfassung`, `## Kernaussagen`, `## Lieblingsfolgen`, etc.).
 
@@ -101,7 +110,7 @@ After the frontmatter, add a short German-language description paragraph (2–4 
 
 The image embed `![[filename.webp]]` will be added after cover download (step 6) — do not add it manually.
 
-### 6. Download cover art
+### 7. Download cover art
 
 Use inline Python (not the download scripts, which require manual list editing). Use Pillow if available for WebP output, otherwise JPEG.
 
@@ -239,7 +248,7 @@ Also add the new entry to the appropriate download script so future re-runs incl
 
 Countries, cities, and persons have no dedicated download script — skip this step for those types.
 
-### 7. Update today's daily note
+### 8. Update today's daily note
 
 **Skip this step for `person`, `country`, and `city`** — they are reference notes, not media being consumed.
 
@@ -258,7 +267,7 @@ obsidian daily:append content="<entry>" 2>/dev/null | grep -Ev "^(20[0-9]{2}-|Yo
 
 If the user provided season/episode or episode title in the arguments, use it; otherwise use a sensible placeholder or ask.
 
-### 8. Re-index qmd
+### 9. Re-index qmd
 
 ```bash
 qmd update && qmd embed
@@ -266,7 +275,7 @@ qmd update && qmd embed
 
 Run this after the note is created and finalized so it's immediately searchable.
 
-### 9. Report to user
+### 10. Report to user
 
 Summarize what was done:
 
