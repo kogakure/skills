@@ -1,0 +1,29 @@
+{
+  "skill_name": "obsidian-process-pages",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Process 20 notes.",
+      "expected_output": "Selects the first 20 alphabetical files in pages/ that lack a ❓ tag, classifies each (Note/Quote/other), rebuilds frontmatter in the correct template field order, strips footnotes into authors/year/sources/publication/published/urls/reference, runs prettier, moves each to its destination folder (04 Permanent/ for Note, 03 Resources/Zitate/ for Quote, etc.), skips ambiguous notes with a ❓ tag instead of asking mid-batch, runs qmd update, and reports counts + moved/skipped lists.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Process 10 pages --dry-run",
+      "expected_output": "Runs the full detection and transform-planning logic for 10 notes but makes no edits and no file moves; reports planned type, planned frontmatter changes, and planned destination for each note.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Clean up the pages folder, do 5 at a time.",
+      "expected_output": "Treats this as 'process 5 notes' — same alphabetical, ❓-skip, footnote-parsing, prettier, move, and report workflow as the primary trigger.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Process 20 notes with enrich.",
+      "expected_output": "Same as eval 1, plus: for any authors/related wikilink pointing to an existing but malformed Person/resource note, invokes obsidian-vault-add to fill it in while preserving existing info. Never creates notes for links that don't resolve to anything yet.",
+      "files": []
+    }
+  ]
+}
