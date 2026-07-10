@@ -4,18 +4,18 @@ Custom [AI Agent Code skills](https://docs.anthropic.com/en/docs/claude-code/ski
 
 ## Skills
 
-| Skill                     | Description                                                                                 |
-| ------------------------- | ------------------------------------------------------------------------------------------- |
-| `obsidian-search-vault`   | Search the Obsidian Zettelkasten vault using hybrid search (BM25 + vector + LLM re-ranking) |
-| `obsidian-vault-add`      | Add a new book, podcast, TV show, movie, person, country, or city to the vault              |
-| `obsidian-weekly-summary` | Summarize the current week from Obsidian daily notes into a structured German recap         |
-| `obsidian-process-notes`  | Process new Obsidian Web Clipper notes into the AI-maintained Wiki layer                    |
-| `obsidian-process-pages`  | Batch-clean and sort old unsorted notes in the vault's `pages/` archive into `04 Permanent/`/`03 Resources/` |
-| `handoff`                 | Compact the current conversation into a structured handoff document for another agent       |
-| `ia-presenter`            | Create high-quality presentations for iA Presenter (Mac) with proper Markdown syntax       |
-| `presentation-zen`        | Design and deliver perfect, engaging presentations using the Presentation Zen philosophy    |
-| `tufte`                   | Apply Edward Tufte's information design principles to create, critique, or improve any chart, graph, infographic, dashboard, or data visualization |
-| `daily-summary`           | Search all Claude Code sessions of the current day and produce a short German bullet list summary of tasks completed, grouped by project/repo     |
+| Skill                                    | Description                                                                                          |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `obsidian/obsidian-search-vault`          | Search the Obsidian Zettelkasten vault using hybrid search (BM25 + vector + LLM re-ranking)           |
+| `obsidian/obsidian-vault-add`             | Add a new book, podcast, TV show, movie, person, country, or city to the vault                        |
+| `obsidian/obsidian-weekly-summary`        | Summarize the current week from Obsidian daily notes into a structured German recap                   |
+| `obsidian/obsidian-process-notes`         | Process new Obsidian Web Clipper notes into the AI-maintained Wiki layer                              |
+| `obsidian/obsidian-process-pages`         | Batch-clean and sort old unsorted notes in the vault's `pages/` archive into `04 Permanent/`/`03 Resources/` |
+| `misc/handoff`                            | Compact the current conversation into a structured handoff document for another agent                |
+| `misc/daily-summary`                      | Search all Claude Code sessions of the current day and produce a short German bullet list summary of tasks completed, grouped by project/repo |
+| `presentations/ia-presenter`              | Create high-quality presentations for iA Presenter (Mac) with proper Markdown syntax                  |
+| `presentations/presentation-zen`          | Design and deliver perfect, engaging presentations using the Presentation Zen philosophy              |
+| `infographics/tufte`                      | Apply Edward Tufte's information design principles to create, critique, or improve any chart, graph, infographic, dashboard, or data visualization |
 
 ## Installation
 
@@ -38,15 +38,16 @@ Then register them in your `~/.claude/settings.json`:
 ```json
 {
   "skills": [
-    "~/.claude/skills/obsidian-search-vault",
-    "~/.claude/skills/obsidian-vault-add",
-    "~/.claude/skills/obsidian-weekly-summary",
-    "~/.claude/skills/obsidian-process-notes",
-    "~/.claude/skills/obsidian-process-pages",
-    "~/.claude/skills/handoff",
-    "~/.claude/skills/ia-presenter",
-    "~/.claude/skills/presentation-zen",
-    "~/.claude/skills/tufte"
+    "~/.claude/skills/obsidian/obsidian-search-vault",
+    "~/.claude/skills/obsidian/obsidian-vault-add",
+    "~/.claude/skills/obsidian/obsidian-weekly-summary",
+    "~/.claude/skills/obsidian/obsidian-process-notes",
+    "~/.claude/skills/obsidian/obsidian-process-pages",
+    "~/.claude/skills/misc/handoff",
+    "~/.claude/skills/misc/daily-summary",
+    "~/.claude/skills/presentations/ia-presenter",
+    "~/.claude/skills/presentations/presentation-zen",
+    "~/.claude/skills/infographics/tufte"
   ]
 }
 ```

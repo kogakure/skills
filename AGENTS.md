@@ -8,15 +8,16 @@ A collection of custom agentic skills for personal use.
 
 ## Skill structure
 
-Each skill lives in its own directory:
+Skills are grouped into category directories (`obsidian/`, `presentations/`, `infographics/`, `misc/`, …). Each skill lives in its own directory under a category:
 
 ```
-skill-name/
-  SKILL.md                  # Required — main skill entry point
-  references/               # Optional — deep reference files loaded lazily
-    *.md
-  evals/
-    evals.json              # Optional — eval prompts for testing the skill
+category/
+  skill-name/
+    SKILL.md                  # Required — main skill entry point
+    references/               # Optional — deep reference files loaded lazily
+      *.md
+    evals/
+      evals.json              # Optional — eval prompts for testing the skill
 ```
 
 ### SKILL.md anatomy
@@ -41,9 +42,9 @@ The body contains the skill's methodology, workflows, and quick references. Keep
 
 ## Adding a new skill
 
-1. Create `skill-name/SKILL.md` with YAML frontmatter.
-2. Add any reference files under `skill-name/references/`.
-3. Add evals under `skill-name/evals/evals.json` (see existing evals for format).
+1. Create `category/skill-name/SKILL.md` with YAML frontmatter (pick an existing category, or add a new one).
+2. Add any reference files under `category/skill-name/references/`.
+3. Add evals under `category/skill-name/evals/evals.json` (see existing evals for format).
 4. Register in `README.md` skills table.
 5. Register in the `settings.json` example block in `README.md`.
 
