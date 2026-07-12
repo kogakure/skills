@@ -130,3 +130,22 @@ but do not fabricate content, only keep what exists.
 - `reference`: list of footnote ids (e.g. `henderson2021bf`).
 - `published`: `YYYY-MM-DD`, only when year+month+day are all known; otherwise omit the field.
 - `year`: bare year number/string.
+
+## Wikilinks with a colon in the display text
+
+A bare `[[Text: With A Colon]]` is **invalid** Obsidian wikilink syntax — Obsidian (and
+prettier's markdown formatter) parses everything before the first `:` as a namespace/page
+prefix and silently drops or mangles the rest. This bites book/article titles extracted from
+footnotes or attribution lines, e.g. a source titled `Mussolini: A New Life`.
+
+Rule: never wrap extracted text containing a colon in bare `[[...]]`.
+
+- If a note for that title already exists (or should exist) in the vault, use the alias
+  form instead: `[[Actual Note Title|Mussolini: A New Life]]`.
+- If no such note exists and creating one is out of scope (as it is for this skill — see the
+  `--enrich` boundary), don't invent a wikilink at all. Write it as plain text, italicized to
+  match the vault's citation convention: `_Mussolini: A New Life_`.
+
+Always render-check any newly constructed wikilink before writing it: does the text between
+`[[` and `]]` (ignoring an explicit `|alias`) contain a `:`? If yes, it needs one of the two
+treatments above, not a bare double-bracket.

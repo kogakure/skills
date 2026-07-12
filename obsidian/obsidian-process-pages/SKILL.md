@@ -91,6 +91,49 @@ plain evergreen notes.
 If a `[^id]:` line doesn't match the expected pattern well enough to extract cleanly, don't
 guess — treat this note as ambiguous (❓ + skip).
 
+### 3b. Quote attribution line (independent of footnotes)
+
+For every note classified `type: Quote`, `authors` **must** end up populated — this holds
+whether or not the note has a footnote. Most quotes carry their real citation in the
+attribution line right under the blockquote, not in a footnote:
+
+```
+> Facts don’t care about your feelings.
+>
+> [[Ben Shapiro]]
+```
+
+```
+> Jefferson's principle...
+>
+> [[Bret Weinstein]], [DarkHorse Podcast: Cave of Mirrors...](url), 16. Jul 2024
+```
+
+Parse that line every time, independent of whether a footnote also exists:
+
+- The `[[Wikilink]]` name(s) right after the blockquote → `authors`. Multiple names joined
+  by `and`/`und`/`,` → split, same rule as footnote multi-author splitting.
+- A podcast/article/book title after the author (plain text or `[Text](url)`) → `sources`.
+- A trailing date (`16. Jul 2024`, `12. Jul 2023`) → `published` (full `YYYY-MM-DD` only) and
+  `year`.
+- A verse/chapter/timestamp (`Verse 316`, `6.2.35b`, `[52:00]`) → `position`.
+- A bare URL in the attribution line (not already in `urls`) → append to `urls`.
+
+**Never let a footnote's byline silently stand in for `authors` on a Quote.** A footnote
+often cites the *reporter* (a video creator, journalist, podcast host) who is not the person
+being quoted — e.g. a Mussolini quote sourced via an "Academy of Ideas" YouTube essay has
+footnote author `[[Academy of Ideas]]`, but the actual speaker in the attribution line is
+`[[Benito Mussolini]]`. `authors` on a Quote note means "who said/wrote these words," which
+is the name in the attribution line, not necessarily the footnote's byline. When both exist
+and agree, no conflict. When they disagree, the attribution line wins for `authors`; the
+footnote's byline/source still legitimately fills `sources`/`urls`/`reference` (it's still
+where you found the quote). If a Quote genuinely has no named speaker (an anonymous quote,
+an organization's own public statement), it's fine for `authors` to be the reporter/reporting
+org instead — that's not a violation of this rule, just the note's only available author.
+
+Before finishing a Quote note, re-check: is `authors` non-empty? If not, look again at the
+blockquote's attribution line — it's very rarely actually missing.
+
 ### 4. Rebuild frontmatter
 
 Using the type resolved in step 2, rebuild the frontmatter in the **exact field order** of
@@ -110,6 +153,10 @@ folder). Rules:
   as `[[Wikilink]]` (Quote/Literature Note only, best-effort), `published` only with a full
   `YYYY-MM-DD`, `urls` list, `reference` list of footnote ids.
 - Drop any frontmatter field that isn't part of the target type's template.
+- Never write a bare `[[Text: With A Colon]]` wikilink — a colon inside double brackets is
+  invalid syntax and prettier will silently mangle it (drops everything after the colon).
+  See "Wikilinks with a colon in the display text" in `references/templates.md` for the fix
+  (alias syntax if the note exists, italic plain text if it doesn't).
 
 ### 5. Format with prettier
 
@@ -149,6 +196,21 @@ If an `authors`/`related` wikilink points to an existing Person (or other resour
 is missing expected fields or otherwise malformed, invoke the `obsidian-vault-add` skill to
 fill it in, explicitly preserving whatever information is already in that note. Do not create
 notes for wikilinks that don't resolve to anything yet — leave those as ordinary (red) links.
+
+### 8. QA pass before reporting
+
+Before writing the end-of-batch report, spot-check the batch's own output, not just the
+plan:
+
+- Every moved `type: Quote` file has a non-empty `authors` field (see step 3b). An empty
+  `authors` on a Quote is a processing bug, not an acceptable outcome — go back and fix it
+  rather than reporting the batch done.
+- No `[[...]]` in any touched file contains a bare colon (see the wikilink-colon rule in
+  `references/templates.md`).
+
+This check is cheap (grep for `authors:\n(  - .*\n)*` immediately followed by a non-list
+field, or for `\[\[[^\]|]*:[^\]|]*\]\]`) and catches the two most common silent failure modes
+of this skill.
 
 ## Ambiguity handling: `❓` and continue
 
