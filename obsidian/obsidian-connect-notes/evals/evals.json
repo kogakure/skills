@@ -1,0 +1,53 @@
+{
+  "skill_name": "obsidian-connect-notes",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Vernetze 10 Notizen.",
+      "expected_output": "Checks vault-root preconditions, bootstraps 99 Meta/Kategorien.md if it doesn't exist yet (no LLM read of note bodies), selects 10 eligible notes from the default wide scope preferring gap notes (no tags/no related) first, for each note reads it, finds neighbours via qmd search/vsearch, adds only tags that already exist in the registry's Tag column plus 🔗, adds up to 3 verified related: links respecting the anti-hub cap, edits frontmatter only via the fence-split mutator (never obsidian property:set, never rewriting the body), runs prettier --write on each touched note, bumps updated, writes a run journal under 99 Meta/references/, runs qmd update, and reports in German with obsidian unresolved unchanged.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "connect notes --dry-run",
+      "expected_output": "Runs the full selection and per-note decision logic for the default N=10 but writes nothing at all — no note edits, no registry changes, no journal file. Prints the planned tags/links per note and the registry delta that would occur.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Kategorisiere 60 Notizen.",
+      "expected_output": "Refuses the literal N=60 request because it exceeds the hard cap of 50, explains that the skill is designed for many small batches rather than one large one, and asks the user to run smaller batches (e.g. multiple runs of 10-20) instead of silently clamping to 50.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Pflege die MOCs.",
+      "expected_output": "Runs --mode moc: reads references/moc-modus.md, only appends new links to existing MOCs under a matching heading or ## Unsortiert (never deleting/reordering/rewriting existing lines or prose), adds the MOC tag where missing without removing Übersicht, creates at most 3 new MOCs (type: Note, tags 🤖+MOC+category tag, German title with English alias, flat wikilink body) only for registry rows with an empty MOC column and >=12 notes, never moves or renames any file, and reports MOCs with prose left untouched for human review.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Räume den Index auf.",
+      "expected_output": "Runs --mode index: if this is the first-ever live run, asks for explicit confirmation before regrouping 00 - Index.md into the 8 fixed domain headings; verifies via the never-lose-a-link algorithm that every existing link target is preserved before writing, aborting rather than dropping a link on any assertion failure; only adds MOCs that have a registry row; runs prettier on the file afterward; and reports the domain each new entry landed under.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Vernetze 10 Notizen --scope core --pure-random --seed 42",
+      "expected_output": "Uses the core scope (04 Permanent/ only), disables the gaps-first preference in favor of literal uniform random sampling over the whole eligible pool, and uses seed 42 — reporting that seed as a provenance record, explicitly noting it is not a guarantee of reproducing the same batch on a later run since the pool shrinks as notes get marked 🔗.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Warum hat diese Notiz jetzt den Tag 'Ökonomie' obwohl sie das Thema nur am Rand erwähnt?",
+      "expected_output": "Explains the tag came from the closed vocabulary in 99 Meta/Kategorien.md's Tag column, chosen because it was the best existing fit; clarifies the skill never invents a new tag on a note directly, and if the fit was too loose, that's feedback the skill would want reflected by editing the registry (e.g. narrowing the candidate or marking a synonym as abgelehnt) rather than by the skill guessing a better tag next time on its own.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Ein Lauf hat vorhin falsche Verweise gesetzt, kannst du das rückgängig machen?",
+      "expected_output": "Points to the run's journal file under 99 Meta/references/connect-notes-<date>-<time>.json and uses the reverse snippet from references/frontmatter-bearbeitung.md to remove exactly the tags/links that run added, guarded by each note's recorded body_sha256 (skipping and reporting any note whose body has changed since, rather than forcing the removal) — explicitly not relying on git revert, since Obsidian Git's automatic commits mix unrelated changes and may be stale.",
+      "files": []
+    }
+  ]
+}
