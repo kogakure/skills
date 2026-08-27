@@ -1,0 +1,89 @@
+{
+  "skill_name": "obsidian-linear-sync",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Sync the Linear project https://linear.app/acme/project/website-redesign-a1b2c3d4e5f6/ into the vault.",
+      "expected_output": "Loads the five Linear MCP tool schemas via ToolSearch with a select: query. Asserts the vault root and that prettier is on PATH; does NOT check for PyYAML. If an API key is available, uses the GraphQL `sync` path in one command; otherwise runs `plan` with an empty issues list, probes with list_projects(fields=[id,name,url,updatedAt]), then get_project(includeMilestones=true), then list_issues with includeArchived=true and no updatedAt filter plus the slim roster call. Runs plan again, and since the ticket count is below max-fetch 40, proceeds without asking. Fetches get_issue(includeRelations=true) and list_comments per ticket, then runs apply. Creates 01 Projects/Linear/Website Redesign/ with an index note plus one file per ticket named '<ID> <Title>.md' with colons and slashes replaced. Does NOT call prettier separately. Runs qmd update && qmd embed. Reports counts. Never calls a mutating Linear tool and never uses Edit or Write on a note.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Sync Website Redesign again, nothing has changed.",
+      "expected_output": "THE IDEMPOTENCY CONTRACT. On the MCP path, makes exactly two calls: list_projects (project updatedAt matches the stored value, so get_project is skipped) and the delta list_issues with updatedAt=<watermark minus 60s>, which returns zero issues. No get_issue and no list_comments. The census does not run because synced census is less than 7 days old. Writes zero files; git status stays clean for the project folder; every ticket reports as unchanged. Does NOT re-render or re-prettify unchanged notes, and does NOT bump `updated:` or `synced:` on any file.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Sync Website Redesign --dry-run",
+      "expected_output": "Performs all reads and the full render, but writes nothing: no directory is created, no file is written or renamed, no watermark advances, and qmd is not re-indexed. Reports per-file verdicts with a dry-run marker. git status and the absence of the mirror folder are identical before and after. Recommends dry-run as the sensible first run on a new project.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "I renamed ENG-42 in Linear. Sync the project.",
+      "expected_output": "The delta pass returns ENG-42 because its updatedAt advanced. The script renames the file with os.rename (NOT obsidian rename, which would trigger update-time-on-edit on every linking file) to the new sanitized '<ID> <Title>.md'. The previous filename stem is prepended to the aliases list, after the bare identifier at position 0, capped at 4 historical entries. Any user text below the linear:end marker survives byte-for-byte. Links to this ticket from other notes in the mirror are piped and get regenerated on the same run, so they keep resolving. A second run immediately after is byte-identical.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Sync Website Redesign — in one ticket note I deleted the linear:begin marker.",
+      "expected_output": "Refuses to write THAT note only, reporting MARKER_MISSING with the file path. Every other ticket in the batch is processed normally — one bad note never aborts the run. Even with --force the skill still refuses, because guessing the protected-region boundary could destroy user prose. Suggests restoring the marker.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Sync Website Redesign — I wrote a paragraph into the middle of one ticket's description.",
+      "expected_output": "The recomputed sync hash of the managed body no longer matches the stored one, so the verdict is CONFLICT. The file is left completely untouched (identical checksum before and after) and the hand-written paragraph is not lost. Reports the path and explains that text above the linear:end marker is machine-owned while text below it is safe. The rest of the batch proceeds. Does not silently overwrite.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "A ticket was deleted in Linear. Sync the project with --census.",
+      "expected_output": "Runs the census roster call with includeArchived=true, so archived tickets are NOT treated as missing. For each identifier present locally but absent from the roster, issues one targeted get_issue to classify: a different projectId means moved (and the new project is named in the report), an error means deleted. Sets `sync missing since` (once, so a second census produces no diff) and `sync missing reason` via a frontmatter-only patch. The file is NEVER deleted and NEVER moved; its filename, content and protected notes section are preserved. Reports orphans loudly with counts and paths. If the ticket later reappears, both markers are cleared automatically.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Sync Website Redesign --only ENG-42",
+      "expected_output": "Skips the delta pass and the census. Fetches exactly one get_issue and one list_comments for ENG-42 and touches exactly that one file, plus the index note if its ticket table changed. Other tickets are not evaluated and not reported as unchanged.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "Sync a Linear project with 300 tickets.",
+      "expected_output": "Paginates list_issues on hasNextPage/cursor with a hard cap of 20 pages. The fetch plan of ~300 exceeds --max-fetch (default 40), so the skill prints the estimated call count and rough token cost and ASKS before fetching, rather than silently spending 600 calls. It does not truncate coverage silently — any bound applied is stated in the report.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Sync Website Redesign (run from a directory outside the vault).",
+      "expected_output": "The preflight fails because the vault sentinel folders and .prettierrc.json are not present. Aborts immediately with a clear message, makes no API calls, and writes nothing. Does not attempt to locate the vault by absolute path or guess.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Sync Website Redesign and set ENG-51 to Done in Linear.",
+      "expected_output": "Performs the sync but REFUSES the write-back. Explains that the mirror is one-way by design (Linear to Markdown) and that no mutating Linear tool is available to this skill — save_issue and friends are deliberately absent from allowed-tools, and the GraphQL path issues zero mutations. Offers the Linear URL so the user can make the change themselves. Does not attempt to work around the restriction.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "Check whether the mirrored notes produced any broken wikilinks.",
+      "expected_output": "Confirms that identifiers from OTHER projects are rendered as external markdown links rather than wikilinks, and that encoding-like tokens (UTF-8, COVID-19, HTTP-2, ISO-8601) and identifiers inside code fences or inline code were left as plain text. Verifies that no raw Linear XML leaked (grep for '<issue' returns 0) and that every wikilink target corresponds to a file that exists. Notes that in-project links are piped ([[ENG-42 Title|ENG-42]]) because Obsidian does not resolve a bare [[ENG-42]] through `aliases:`, and that people and initiatives are linked only when a vault note actually exists.",
+      "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "I want the mirrored notes in German.",
+      "expected_output": "Runs the sync with --lang de, which renders section headings, status group names and duration units in German. Persists the choice as `sync lang` on the index note, so a later bare run keeps German instead of reverting to the English default. Explains that the marker comments are matched by their linear:begin/linear:end token rather than their wording, so switching language does not orphan existing notes, and that operator messages and report keys stay English regardless. Notes that existing files are rewritten once by the language change and are byte-stable afterwards.",
+      "files": []
+    },
+    {
+      "id": 14,
+      "prompt": "Does this need write access to my Linear workspace?",
+      "expected_output": "Answers: no — a read scope is sufficient. States that the script issues three GraphQL queries (projects, project, issues) and zero mutations, and that only read-only MCP tools are declared. Advises against granting write, issue-create, comment-create or admin scopes. Mentions honestly that Linear personal API keys are not scopable per project, so read covers everything the account can see, and that the key should live outside any git repository (the default lookup is ~/.config/linear/api-key with 0600) because a vault with automatic commits would otherwise commit it.",
+      "files": []
+    }
+  ]
+}

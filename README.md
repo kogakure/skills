@@ -4,19 +4,20 @@ Custom [AI Agent Code skills](https://docs.anthropic.com/en/docs/claude-code/ski
 
 ## Skills
 
-| Skill                                    | Description                                                                                          |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `obsidian/obsidian-search-vault`          | Search the Obsidian Zettelkasten vault using hybrid search (BM25 + vector + LLM re-ranking)           |
-| `obsidian/obsidian-vault-add`             | Add a new book, podcast, TV show, movie, person, country, or city to the vault                        |
-| `obsidian/obsidian-weekly-summary`        | Summarize the current week from Obsidian daily notes into a structured German recap                   |
-| `obsidian/obsidian-process-notes`         | Process new Obsidian Web Clipper notes into the AI-maintained Wiki layer                              |
-| `obsidian/obsidian-process-pages`         | Batch-clean and sort old unsorted notes in the vault's `pages/` archive into `04 Permanent/`/`03 Resources/` |
-| `obsidian/obsidian-connect-notes`         | Connect the Zettelkasten: tag and cross-link random unprocessed notes via a category registry, curate Maps of Content, and structure the Index |
-| `misc/handoff`                            | Compact the current conversation into a structured handoff document for another agent                |
-| `misc/daily-summary`                      | Search all Claude Code sessions of the current day and produce a short German bullet list summary of tasks completed, grouped by project/repo |
-| `presentations/ia-presenter`              | Create high-quality presentations for iA Presenter (Mac) with proper Markdown syntax                  |
-| `presentations/presentation-zen`          | Design and deliver perfect, engaging presentations using the Presentation Zen philosophy              |
-| `infographics/tufte`                      | Apply Edward Tufte's information design principles to create, critique, or improve any chart, graph, infographic, dashboard, or data visualization |
+| Skill                              | Description                                                                                                                                                              |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `obsidian/obsidian-search-vault`   | Search the Obsidian Zettelkasten vault using hybrid search (BM25 + vector + LLM re-ranking)                                                                              |
+| `obsidian/obsidian-vault-add`      | Add a new book, podcast, TV show, movie, person, country, or city to the vault                                                                                           |
+| `obsidian/obsidian-weekly-summary` | Summarize the current week from Obsidian daily notes into a structured German recap                                                                                      |
+| `obsidian/obsidian-process-notes`  | Process new Obsidian Web Clipper notes into the AI-maintained Wiki layer                                                                                                 |
+| `obsidian/obsidian-process-pages`  | Batch-clean and sort old unsorted notes in the vault's `pages/` archive into `04 Permanent/`/`03 Resources/`                                                             |
+| `obsidian/obsidian-connect-notes`  | Connect the Zettelkasten: tag and cross-link random unprocessed notes via a category registry, curate Maps of Content, and structure the Index                           |
+| `obsidian/obsidian-linear-sync`    | Mirror a Linear project one-way into the vault: one Markdown file per ticket, a linked index note, wikilinked ticket references, comments, and a protected notes section |
+| `misc/handoff`                     | Compact the current conversation into a structured handoff document for another agent                                                                                    |
+| `misc/daily-summary`               | Search all Claude Code sessions of the current day and produce a short German bullet list summary of tasks completed, grouped by project/repo                            |
+| `presentations/ia-presenter`       | Create high-quality presentations for iA Presenter (Mac) with proper Markdown syntax                                                                                     |
+| `presentations/presentation-zen`   | Design and deliver perfect, engaging presentations using the Presentation Zen philosophy                                                                                 |
+| `infographics/tufte`               | Apply Edward Tufte's information design principles to create, critique, or improve any chart, graph, infographic, dashboard, or data visualization                       |
 
 ## Installation
 
@@ -45,6 +46,7 @@ Then register them in your `~/.claude/settings.json`:
     "~/.claude/skills/obsidian/obsidian-process-notes",
     "~/.claude/skills/obsidian/obsidian-process-pages",
     "~/.claude/skills/obsidian/obsidian-connect-notes",
+    "~/.claude/skills/obsidian/obsidian-linear-sync",
     "~/.claude/skills/misc/handoff",
     "~/.claude/skills/misc/daily-summary",
     "~/.claude/skills/presentations/ia-presenter",
