@@ -130,12 +130,17 @@ roughly 200 characters. Strip wikilink brackets, blockquote markers, and footnot
 ### 3. Find neighbours
 
 ```bash
-qmd search "<Query>" -c zettelkasten -n 12
+qmd search "<Query>" -c permanent -c moc -c areas -c literature-notes -c books -c people -n 12
 ```
 
-(or `qmd vsearch` instead, only if the preflight showed `Pending == 0`). **Only the
-`zettelkasten` collection exists** — ignore any collection table you may have seen documented
-elsewhere (e.g. in `obsidian-search-vault`); it is stale.
+(or `qmd vsearch` instead, only if the preflight showed `Pending == 0`). The vault is indexed one
+collection per folder; `obsidian-search-vault` documents the full table. Repeat `-c` per
+collection — a comma-separated list fails with `Collection not found`.
+
+Scoping to these six is most of step 4 done in advance: `daily`, `quotes` and the meta folders
+are simply not searched. If `qmd` answers `Collection not found`, the index on this machine is
+still the old single `zettelkasten` collection — tell the user and fall back to an unscoped
+`qmd search "<Query>" -n 12` for this run.
 
 ### 4. Filter candidates
 
@@ -185,7 +190,7 @@ prettier-clean this will reflow lines/lists/quotes; it must never change what th
 
 ### 9. Journal the change
 
-Append an entry (path, tags added, links added, `updated` value, body SHA-256 taken *after*
+Append an entry (path, tags added, links added, `updated` value, body SHA-256 taken _after_
 prettier) to this run's journal — see the format and the undo mechanism in
 `references/frontmatter-bearbeitung.md`.
 
@@ -255,7 +260,7 @@ current). Rely instead on the run journal and its reverse snippet, both describe
 
 - Never run `git` in the vault.
 - Never use `obsidian property:set` / `property:remove` on `tags:` or `related:`.
-- Never change what a normale Notiz *says*. `prettier --write` normalization is the only
+- Never change what a normale Notiz _says_. `prettier --write` normalization is the only
   permitted body operation on one; no rewording, no additions, no deletions of content.
 - Never delete, reorder, or rewrite an existing tag, link, or heading anywhere.
 - Never `mv`, `rm`, or rename anything.
