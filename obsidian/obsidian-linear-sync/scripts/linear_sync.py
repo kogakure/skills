@@ -117,8 +117,34 @@ LABELS = {
 }
 GROUP_ORDER = ["triage", "started", "unstarted", "backlog", "completed", "canceled"]
 
+def system_zone():
+    """The system zone as a named, DST-aware ZoneInfo.
+
+    `datetime.now().astimezone().tzinfo` is a fixed offset frozen at the current season, so
+    every DST switch would shift all past timestamps by an hour and rewrite every note.
+    """
+    candidates = [os.environ.get("TZ", "").lstrip(":")]
+    try:
+        target = os.path.realpath("/etc/localtime")
+        if "zoneinfo/" in target:
+            candidates.append(target.split("zoneinfo/", 1)[1])
+    except OSError:
+        pass
+    try:
+        candidates.append(Path("/etc/timezone").read_text(encoding="utf-8").strip())
+    except OSError:
+        pass
+    for name in candidates:
+        if name and not name.startswith("/"):
+            try:
+                return ZoneInfo(name)
+            except Exception:                               # noqa: BLE001
+                continue
+    return datetime.now().astimezone().tzinfo               # last resort: fixed offset
+
+
 L = LABELS["en"]
-TZ = datetime.now().astimezone().tzinfo    # system local zone unless overridden
+TZ = system_zone()                         # system local zone unless overridden
 
 
 def configure(opts: dict) -> None:
